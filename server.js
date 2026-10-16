@@ -18,7 +18,7 @@ const allowedOrigins = new Set([
   ...[CLIENT_URL, ...(process.env.CLIENT_URLS || "").split(",")]
     .map((origin) => origin.trim().replace(/\/$/, ""))
     .filter(Boolean),
-  "https://todo-dmgo.vercel.app",
+  "https://taskflow-frontend-three-sage.vercel.app",
   "http://localhost:5174",
   "http://127.0.0.1:5174",
 ]);
