@@ -14,14 +14,30 @@ const PORT = Number(process.env.PORT) || 5001;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5174";
 // Configure one or more stable frontend origins in Vercel's backend environment.
 // CLIENT_URL is the primary origin; CLIENT_URLS optionally accepts comma-separated extras.
+
+
 const allowedOrigins = new Set([
-  ...[CLIENT_URL, ...(process.env.CLIENT_URLS || "").split(",")]
-    .map((origin) => origin.trim().replace(/\/$/, ""))
-    .filter(Boolean),
-  "https://taskflow-frontend-three-sage.vercel.app",
-  "http://localhost:5174",
-  "http://127.0.0.1:5174",
+    ...[CLIENT_URL, ...(process.env.CLIENT_URLS || "").split(",")]
+        .map((origin) => origin.trim().replace(/\/$/, ""))
+        .filter(Boolean),
+
+    "https://taskflow-frontend-three-sage.vercel.app",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
 ]);
+
+function isAllowedOrigin(origin) {
+    if (!origin) return true;
+
+    const normalizedOrigin = origin.trim().replace(/\/$/, "");
+
+    return (
+        allowedOrigins.has(normalizedOrigin) ||
+        /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(normalizedOrigin)
+    );
+}
+
+
 
 if (process.env.NODE_ENV === "production") app.set("trust proxy", 1);
 
