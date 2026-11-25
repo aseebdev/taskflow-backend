@@ -16,26 +16,40 @@ const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5174";
 // CLIENT_URL is the primary origin; CLIENT_URLS optionally accepts comma-separated extras.
 
 
+const cors = require("cors");
+
 const allowedOrigins = new Set([
     ...[CLIENT_URL, ...(process.env.CLIENT_URLS || "").split(",")]
-        .map((origin) => origin.trim().replace(/\/$/, ""))
+        .map(origin => origin.trim().replace(/\/$/, ""))
         .filter(Boolean),
 
-    "https://taskflow-frontend-three-sage.vercel.app",
+    "https://taskflow-frontend-ayoxau80m-aseebdev.vercel.app",
+
     "http://localhost:5174",
-    "http://127.0.0.1:5174",
+    "http://127.0.0.1:5174"
 ]);
 
 function isAllowedOrigin(origin) {
     if (!origin) return true;
 
-    const normalizedOrigin = origin.trim().replace(/\/$/, "");
-
     return (
-        allowedOrigins.has(normalizedOrigin) ||
-        /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(normalizedOrigin)
+        allowedOrigins.has(origin) ||
+        /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)
     );
 }
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (isAllowedOrigin(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 
 
